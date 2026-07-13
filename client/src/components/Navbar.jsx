@@ -26,7 +26,7 @@ const Navbar = () => {
             </button>
 
             <p className="text-gray-600 cursor-pointer max-sm:hidden">
-              Hi, GreatStack
+              Hi, Atharva
             </p>
 
             <div className="relative group">
