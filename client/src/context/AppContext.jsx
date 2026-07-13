@@ -5,9 +5,13 @@ export const AppContext = createContext();
 const AppContextProvider = (props) => {
   const [user, setUser] = useState(null);
 
+  const [isLogin, setIsLogin] = useState(false);
+
   const value = {
     user,
     setUser,
+    isLogin,
+    setIsLogin,
   };
 
   return (

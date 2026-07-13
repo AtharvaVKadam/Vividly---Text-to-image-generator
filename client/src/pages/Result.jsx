@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { assets } from "../assets/assets";
 
 const Result = () => {
@@ -10,21 +11,34 @@ const Result = () => {
   const onSubmitHandler = async (e) => {};
 
   return (
-    <form
+    <motion.form
       onSubmit={onSubmitHandler}
       className="flex flex-col min-h-[90vh] justify-center items-center"
+      initial={{ opacity: 0, y: 60 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
     >
-      <div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.7 }}
+      >
         <div className="relative">
           <img src={image} alt="" className="max-w-sm rounded" />
 
           <span
-            className={`absolute bottom-0 left-0 h-1 bg-blue-500 ${loading ? "w-full transition-all duration-[10s]" : "w-0"}`}
+            className={`absolute bottom-0 left-0 h-1 bg-blue-500 ${
+              loading ? "w-full transition-all duration-[10s]" : "w-0"
+            }`}
           />
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center gap-3 mt-4">
+          <motion.div
+            className="flex items-center justify-center gap-3 mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
             <div
               role="status"
               className="h-4 w-4 animate-spin rounded-full border-2 border-black border-r-transparent"
@@ -33,12 +47,17 @@ const Result = () => {
             </div>
 
             <p className="text-gray-600">Creating your AI image...</p>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {!isImageLoaded && (
-        <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
+        <motion.div
+          className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
           <input
             onChange={(e) => setInput(e.target.value)}
             value={input}
@@ -53,17 +72,20 @@ const Result = () => {
           >
             Generate
           </button>
-        </div>
+        </motion.div>
       )}
 
       {isImageLoaded && (
-        <div
-          onClick={() => {
-            setIsImageLoaded(false);
-          }}
+        <motion.div
           className="flex gap-2 flex-wrap justify-center text-white text-sm p-0.5 mt-10 rounded-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <p className="bg-transparent border border-zinc-900 text-black px-8 py-3 rounded-full cursor-pointer">
+          <p
+            onClick={() => setIsImageLoaded(false)}
+            className="bg-transparent border border-zinc-900 text-black px-8 py-3 rounded-full cursor-pointer"
+          >
             Generate Another
           </p>
 
@@ -74,9 +96,9 @@ const Result = () => {
           >
             Download
           </a>
-        </div>
+        </motion.div>
       )}
-    </form>
+    </motion.form>
   );
 };
 

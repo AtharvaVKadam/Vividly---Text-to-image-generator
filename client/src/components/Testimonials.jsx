@@ -1,9 +1,16 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { assets, testimonialsData } from "../assets/assets";
 
 const Testimonials = () => {
   return (
-    <div className="flex flex-col items-center justify-center my-20 py-12">
+    <motion.div
+      className="flex flex-col items-center justify-center my-20 py-12"
+      initial={{ opacity: 0.2, y: 100 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      viewport={{ once: true }}
+    >
       <h1 className="text-3xl sm:text-4xl font-semibold mb-2">
         Customer testimonials
       </h1>
@@ -12,9 +19,16 @@ const Testimonials = () => {
 
       <div className="flex flex-wrap gap-6">
         {testimonialsData.map((testimonial, index) => (
-          <div
+          <motion.div
             key={index}
             className="bg-white/20 p-12 rounded-lg shadow-md border w-80 m-auto cursor-pointer hover:scale-[1.02] transition-all"
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.2,
+            }}
+            viewport={{ once: true }}
           >
             <div className="flex flex-col items-center">
               <img
@@ -39,10 +53,10 @@ const Testimonials = () => {
                 {testimonial.text}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
