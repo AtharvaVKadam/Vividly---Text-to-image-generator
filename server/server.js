@@ -4,6 +4,7 @@ import "dotenv/config";
 import userRouter from "./routes/userRoutes.js";
 
 import connectDB from "./config/mongodb.js";
+import imageRouter from "./routes/imageRoutes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors());
 await connectDB();
 
 app.use("/api/user", userRouter);
+app.use("/api/image", imageRouter);
 
 app.get("/", (req, res) => {
   res.send("Vividly API");
