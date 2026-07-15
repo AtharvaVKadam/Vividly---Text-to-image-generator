@@ -12,20 +12,25 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
 
     try {
       let response;
 
       if (state === "Login") {
-        response = await axios.post(backendUrl + "/api/user/login", {
+        response = await axios.post(`${backendUrl}/api/user/login`, {
           email,
           password,
         });
       } else {
-        response = await axios.post(backendUrl + "/api/user/register", {
+        response = await axios.post(`${backendUrl}/api/user/register`, {
           name,
           email,
           password,
@@ -38,12 +43,25 @@ const Login = () => {
         setUser(data.user);
         setToken(data.token);
         localStorage.setItem("token", data.token);
+
+        toast.success(
+          state === "Login"
+            ? "Logged in successfully!"
+            : "Account created successfully!",
+        );
+
         setIsLogin(false);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +93,7 @@ const Login = () => {
         className="relative w-full max-w-md rounded-3xl bg-white p-8 shadow-lg"
       >
         <img
-          onClick={() => setIsLogin(false)}
+          onClick={() => !loading && setIsLogin(false)}
           src={assets.cross_icon}
           alt=""
           className="absolute top-5 right-5 w-5 cursor-pointer hover:rotate-90 transition duration-200"
@@ -107,7 +125,8 @@ const Login = () => {
               type="text"
               placeholder="Full Name"
               required
-              className="w-full outline-none"
+              disabled={loading}
+              className="w-full outline-none bg-transparent"
             />
           </div>
         )}
@@ -120,7 +139,8 @@ const Login = () => {
             type="email"
             placeholder="Email Address"
             required
-            className="w-full outline-none"
+            disabled={loading}
+            className="w-full outline-none bg-transparent"
           />
         </div>
 
@@ -132,7 +152,8 @@ const Login = () => {
             type="password"
             placeholder="Password"
             required
-            className="w-full outline-none"
+            disabled={loading}
+            className="w-full outline-none bg-transparent"
           />
         </div>
 
@@ -144,9 +165,10 @@ const Login = () => {
 
         <button
           type="submit"
-          className="mt-8 w-full rounded-xl bg-linear-to-r from-violet-600 via-fuchsia-500 to-pink-500 py-3 text-white font-semibold shadow-lg hover:scale-[1.02] transition duration-300"
+          disabled={loading}
+          className="mt-8 w-full rounded-xl bg-linear-to-r from-violet-600 via-fuchsia-500 to-pink-500 py-3 text-white font-semibold shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {state}
+          {loading ? "Please wait... Server is starting" : state}
         </button>
 
         <div className="my-7 flex items-center">
@@ -157,7 +179,8 @@ const Login = () => {
 
         <button
           type="button"
-          className="w-full rounded-xl border border-zinc-300 py-3 font-medium hover:bg-zinc-50 transition duration-300"
+          disabled={loading}
+          className="w-full rounded-xl border border-zinc-300 py-3 font-medium hover:bg-zinc-50 transition duration-300 disabled:opacity-60"
         >
           Continue with Google
         </button>
@@ -166,7 +189,7 @@ const Login = () => {
           <p className="mt-6 text-center text-zinc-500">
             Don't have an account?{" "}
             <span
-              onClick={() => setState("Sign Up")}
+              onClick={() => !loading && setState("Sign Up")}
               className="font-semibold text-violet-600 cursor-pointer hover:underline"
             >
               Sign Up
@@ -176,7 +199,7 @@ const Login = () => {
           <p className="mt-6 text-center text-zinc-500">
             Already have an account?{" "}
             <span
-              onClick={() => setState("Login")}
+              onClick={() => !loading && setState("Login")}
               className="font-semibold text-violet-600 cursor-pointer hover:underline"
             >
               Login

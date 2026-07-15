@@ -13,19 +13,23 @@ const registerUser = async (req, res) => {
       });
     }
 
-    const salt = await bcrypt.genSalt(10);
+    const existingUser = await userModel.findOne({ email });
 
+    if (existingUser) {
+      return res.json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const userData = {
+    const user = await userModel.create({
       name,
       email,
       password: hashedPassword,
-    };
-
-    const newUser = new userModel(userData);
-
-    const user = await newUser.save();
+    });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
@@ -39,9 +43,16 @@ const registerUser = async (req, res) => {
   } catch (error) {
     console.log(error);
 
+    if (error.code === 11000) {
+      return res.json({
+        success: false,
+        message: "Email already exists",
+      });
+    }
+
     res.json({
       success: false,
-      message: error.message,
+      message: "Something went wrong",
     });
   }
 };
