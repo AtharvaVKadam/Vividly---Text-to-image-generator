@@ -1,8 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { assets, plans } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const BuyCredit = () => {
+  const { backendUrl, token } = useContext(AppContext);
+
+  const createCheckout = async (plan) => {
+    try {
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
+
+      const { data } = await axios.post(
+        backendUrl + "/api/payment/checkout",
+        { plan },
+        {
+          headers: { token },
+        },
+      );
+
+      if (data.success) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
   return (
     <motion.div
       className="min-h-[calc(100vh-80px)] px-6 py-16"
@@ -42,8 +73,7 @@ const BuyCredit = () => {
               delay: index * 0.2,
             }}
             viewport={{ once: true }}
-            className={`relative w-80 rounded-3xl border p-8 flex flex-col transition-all duration-300
-            ${
+            className={`relative w-80 rounded-3xl border p-8 flex flex-col transition-all duration-300 ${
               item.id === "Advanced"
                 ? "border-fuchsia-500 shadow-xl scale-105"
                 : "border-zinc-200 shadow-md hover:-translate-y-2 hover:shadow-xl"
@@ -86,8 +116,16 @@ const BuyCredit = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
-              className={`mt-auto py-3 rounded-xl font-semibold text-white transition-all duration-300
-              ${
+              onClick={() =>
+                createCheckout(
+                  item.id === "Basic"
+                    ? "basic"
+                    : item.id === "Advanced"
+                      ? "advanced"
+                      : "business",
+                )
+              }
+              className={`mt-auto py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
                 item.id === "Advanced"
                   ? "bg-linear-to-r from-violet-600 via-fuchsia-500 to-pink-500 shadow-lg shadow-fuchsia-300/50 hover:shadow-fuchsia-500/60"
                   : "bg-black hover:bg-zinc-800"

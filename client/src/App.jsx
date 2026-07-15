@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import { AppContext } from "./context/AppContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const App = () => {
   const { isLogin } = useContext(AppContext);
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/result" element={<Result />} />
           <Route path="/buy" element={<BuyCredit />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
         <Footer />
       </div>

@@ -5,6 +5,7 @@ import userRouter from "./routes/userRoutes.js";
 
 import connectDB from "./config/mongodb.js";
 import imageRouter from "./routes/imageRoutes.js";
+import paymentRouter from "./routes/paymentRoutes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ await connectDB();
 
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
+app.use("/api/payment", paymentRouter);
 
 app.get("/", (req, res) => {
   res.send("Vividly API");
