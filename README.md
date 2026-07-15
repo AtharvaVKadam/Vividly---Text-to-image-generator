@@ -12,7 +12,9 @@ Frontend: https://vividly11.vercel.app
 
 Backend: https://vividly-text-to-image-generator.onrender.com
 
-<video controls src="VID_20260715_112205.mp4" title="Title"></video>
+
+https://github.com/user-attachments/assets/73f8df60-46d7-4e07-9e28-401c78eb8b55
+
 
 ---
 
