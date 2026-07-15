@@ -11,7 +11,6 @@ const BuyCredit = () => {
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
     >
-      {/* Heading */}
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 40 }}
@@ -32,7 +31,6 @@ const BuyCredit = () => {
         </p>
       </motion.div>
 
-      {/* Pricing Cards */}
       <div className="mt-16 flex flex-wrap justify-center gap-8">
         {plans.map((item, index) => (
           <motion.div
@@ -82,7 +80,7 @@ const BuyCredit = () => {
             <div className="mt-10">
               <span className="text-5xl font-bold">${item.price}</span>
 
-              <p className="mt-2 text-zinc-500">{item.credits} Credits</p>
+              <p className="mt-2 text-zinc-500">{item.credit} Credits</p>
             </div>
 
             <motion.button

@@ -2,10 +2,50 @@ import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [state, setState] = useState("Login");
-  const { setIsLogin } = useContext(AppContext);
+  const { setIsLogin, backendUrl, setToken, setUser } = useContext(AppContext);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      let response;
+
+      if (state === "Login") {
+        response = await axios.post(backendUrl + "/api/user/login", {
+          email,
+          password,
+        });
+      } else {
+        response = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          email,
+          password,
+        });
+      }
+
+      const data = response.data;
+
+      if (data.success) {
+        setUser(data.user);
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        setIsLogin(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -24,6 +64,7 @@ const Login = () => {
       transition={{ duration: 0.2 }}
     >
       <motion.form
+        onSubmit={onSubmitHandler}
         initial={{ opacity: 0, scale: 0.96, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }}
@@ -61,6 +102,8 @@ const Login = () => {
           <div className="mt-8 flex items-center gap-3 rounded-xl border border-zinc-300 px-4 py-3">
             <img src={assets.profile_icon} alt="" className="w-5" />
             <input
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               type="text"
               placeholder="Full Name"
               required
@@ -72,6 +115,8 @@ const Login = () => {
         <div className="mt-5 flex items-center gap-3 rounded-xl border border-zinc-300 px-4 py-3">
           <img src={assets.email_icon} alt="" className="w-5" />
           <input
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             type="email"
             placeholder="Email Address"
             required
@@ -82,6 +127,8 @@ const Login = () => {
         <div className="mt-5 flex items-center gap-3 rounded-xl border border-zinc-300 px-4 py-3">
           <img src={assets.lock_icon} alt="" className="w-5" />
           <input
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             type="password"
             placeholder="Password"
             required
